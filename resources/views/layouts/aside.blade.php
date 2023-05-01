@@ -17,6 +17,29 @@
       z-index: 1;
       border-right : 1px solid;
     }
-  </style>
+    </style>
 </head>
-
+<body>
+  
+  <div class="sidebar">
+    <h5 class="mb-3">メニュー</h5>
+    <ul class="nav flex-column">
+      <li class="nav-item">
+        <a class="nav-link" href="#">タイムライン</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="{{route('food.create')}}">食事記録</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="{{route('auto.create')}}">体重・体脂肪率記録</a>
+      </li> 
+      <li class="nav-item">
+        <a class="nav-link" href="{{route('auto.edit', ['auto' => Auth::id()])}}">プロフィール編集</a>
+      </li> 
+      <li class="nav-item">
+        <a class="nav-link" href="{{route('auto.show', ['auto' => Auth::id()])}}">マイページ</a>
+      </li> 
+      
+    </ul>
+    
+  </body>

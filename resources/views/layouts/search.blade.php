@@ -20,48 +20,31 @@
     }
 
   </style>
-</head>
 
 <body>
   <div class="sidebar">
     <h5 class="mb-3">検索</h5>
-
     
-  <div class="sidebar">
-    <h5 class="mb-3">メニュー</h5>
-    <ul class="nav flex-column">
-      <li class="nav-item">
-        <a class="nav-link" href="#">タイムライン</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="{{route('food.create')}}">食事記録</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="{{route('auto.create')}}">体重・体脂肪率記録</a>
-      </li> 
-      <li class="nav-item">
-        <a class="nav-link" href="{{route('auto.edit', ['auto' => Auth::id()])}}">プロフィール編集</a>
-      </li> 
-    </ul>
+    
     <ul class="nav flex-column">
       <form method="get" action="">
 
         <li class="nav-item">
           <div class='d-flex'>
             <input type='date' class='start-form' name='s-date' id='date' value=""/>
-              <p>~</p>
+            <p>~</p>
             <input type='date' class='end-form' name='e-date' id='date' value=""/>
           </div>
         </li>
         <li class="nav-item">
           <input type="text" name="name" placeholder="ユーザー名を入力">
         </li>
-          <br>
+        <br>
         <li class="nav-item">
           <select name="gender">
             <option value="">性別</option>
-          <option value="0">男性</option>
-          <option value="1">女性</option>
+            <option value="0">男性</option>
+            <option value="1">女性</option>
           <option value="②">その他</option>
           </select>
         </li>
@@ -77,4 +60,6 @@
     </ul> 
   </div>
   </div>
+      
 </body>
+</head>

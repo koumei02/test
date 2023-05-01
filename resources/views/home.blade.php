@@ -1,5 +1,5 @@
-@section('content')
 @extends('layouts.app')
+@section('content')
 @extends('layouts.aside')
 @extends('layouts.search')
 

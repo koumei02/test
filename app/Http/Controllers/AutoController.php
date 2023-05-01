@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use App\Weight;
 use App\Profile;
+use App\Food;
 
 class AutoController extends Controller
 {
@@ -60,6 +61,21 @@ class AutoController extends Controller
     public function show($id)
     {
         //詳細画面の表示。
+        $profiling = new Profile;  
+        $weighting = new Weight;
+        $fooding = new Food;
+
+        $pro = $profiling->where('user_id', Auth::id())->get();
+        $body = $weighting->where('user_id', Auth::id())->get();
+        $eat = $fooding->where('user_id', Auth::id())->get();
+
+        return view('mypage', [
+            'profile' => $pro,
+            'weight' => $body,
+            'food' => $eat,
+        ]);
+
+
     }
 
     /**
@@ -102,7 +118,7 @@ class AutoController extends Controller
             $profiling->target_fat = $request->target_fat;
             $profiling->user_id = Auth::id();
     
-            
+
             $profiling->save();
     
         }
