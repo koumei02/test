@@ -18,7 +18,18 @@ class AutoController extends Controller
      */
     public function index()
     {
-        return view('timeline');
+        $weighting = new Weight;
+        $fooding = new Food;
+
+        $body = $weighting->all()->toArray();
+        $eat = $fooding->all()->toArray();
+
+
+
+        return view('timeline',[
+            'weight' => $body,
+            'food' => $eat,
+        ]);
     }
 
     /**

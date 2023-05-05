@@ -6,6 +6,7 @@
                 <div class="card-header">
                     プロフィール編集
                 </div>
+                
                 <div class="card-body">
                     <div class="card-body">
                         <form action="{{route('auto.update', ['auto' => Auth::id()])}}" method="post" enctype="multipart/form-data">
