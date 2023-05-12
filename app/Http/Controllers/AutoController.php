@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Weight;
 use App\Profile;
 use App\Food;
+use App\Favorite;
 
 class AutoController extends Controller
 {
@@ -20,15 +21,27 @@ class AutoController extends Controller
     {
         $weighting = new Weight;
         $fooding = new Food;
+        $fav = new Favorite;
 
         $body = $weighting->all()->toArray();
-        $eat = $fooding->all()->toArray();
 
+        $eat  = $fooding 
+                    ->join('users', 'foods.user_id', 'users.id')
+                    ->join('profiles', 'foods.user_id', 'profiles.user_id')->get();
 
+                    $eat = $fooding->orderBy('date', 'desc')->get();
+
+        $body  = $weighting 
+                    ->join('users', 'weights.user_id', 'users.id')
+                    ->join('profiles', 'weights.user_id', 'profiles.user_id')->get();
+                    
+                    $body  = $weighting->orderBy('date', 'desc')->get();
+                    
 
         return view('timeline',[
             'weight' => $body,
             'food' => $eat,
+            'favorite' => $fav,
         ]);
     }
 
@@ -75,16 +88,32 @@ class AutoController extends Controller
         $profiling = new Profile;  
         $weighting = new Weight;
         $fooding = new Food;
+        $fav = new Favorite;
 
         $pro = $profiling->where('user_id', Auth::id())->get();
         $body = $weighting->where('user_id', Auth::id())->get();
         $eat = $fooding->where('user_id', Auth::id())->get();
+        
+        $eat  = $fooding 
+        ->join('users', 'foods.user_id', 'users.id')
+        ->join('profiles', 'foods.user_id', 'profiles.user_id')->get();
+
+        $eat = $fooding->orderBy('date', 'desc')->get();
+        
+        $body  = $weighting 
+        ->join('users', 'weights.user_id', 'users.id')
+        ->join('profiles', 'weights.user_id', 'profiles.user_id')->get();
+        
+        $body  = $weighting->orderBy('date', 'desc')->get();
+        
+
 
         return view('mypage', [
             'profile' => $pro,
             'weight' => $body,
             'food' => $eat,
-        ]);
+            'favorite' => $fav,
+        ]);    
 
 
     }
@@ -163,5 +192,10 @@ class AutoController extends Controller
     public function destroy($id)
     {
         //削除処理。投稿内容の削除。
+        $delete = Food::find($id);
+        $delete->delete();
+
+        return redirect()->route('auto.show',['auto' => Auth::id()]);
+
     }
 }

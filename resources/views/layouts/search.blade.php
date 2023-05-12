@@ -45,7 +45,7 @@
             <option value="">性別</option>
             <option value="0">男性</option>
             <option value="1">女性</option>
-          <option value="②">その他</option>
+          <option value="2">その他</option>
           </select>
         </li>
         <li class="nav-item">
@@ -59,7 +59,7 @@
       </form>
     </ul> 
   </div>
-  </div>
+  </div> 
       
 </body>
 </head>

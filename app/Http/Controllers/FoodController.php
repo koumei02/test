@@ -6,6 +6,10 @@ use Illuminate\Support\Facades\Auth;
 
 use Illuminate\Http\Request;
 use App\Food;
+use App\Weight;
+use App\Profile;
+use App\Favorite;
+
 
 class FoodController extends Controller
 {
@@ -80,9 +84,37 @@ class FoodController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
-    {
-        //
+    public function show(int $id) {
+        $profiling = new Profile;  
+        $weighting = new Weight;
+        $fooding = new Food;
+
+        $other_p = Profile::find($id);
+        // $other_w = Weight::where();
+        // $other_f = Food::>where('user_id', $id)->get();
+        $pro = $profiling->where('user_id', $id)->get();
+        $body = $weighting->where('user_id', $id)->get();
+        $eat = $fooding->where('user_id', $id)->get();
+
+        $eat  = $fooding 
+        ->join('users', 'foods.user_id', 'users.id')
+        ->join('profiles', 'foods.user_id', 'profiles.user_id')->get();
+
+        $eat = $fooding->orderBy('date', 'desc')->get();
+        
+        $body  = $weighting 
+        ->join('users', 'weights.user_id', 'users.id')
+        ->join('profiles', 'weights.user_id', 'profiles.user_id')->get();
+        
+        $body  = $weighting->orderBy('date', 'desc')->get();
+
+
+
+        return view('account', [
+            'profile' => $pro,
+            'weight' => $body,
+            'food' => $eat,
+        ]);
     }
 
     /**
@@ -116,6 +148,41 @@ class FoodController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $delete = Weight::find($id);
+        $delete->delete();
+
+        return redirect()->route('auto.show',['auto' => Auth::id()]);
+
     }
+    public function ajaxlike(Request $request)
+    {
+        $id = Auth::user()->id;
+        $food_id = $request->food_id;
+        $like = new Favorite;
+        $food = Food::findOrFail($food_id);
+
+        // 空でない（既にいいねしている）なら
+        if ($like->like_exist($id, $food_id)) {
+            //likesテーブルのレコードを削除
+            $like = Favorite::where('food_id', $food_id)->where('user_id', $id)->delete();
+        } else {
+            //空（まだ「いいね」していない）ならlikesテーブルに新しいレコードを作成する
+            $like = new Favorite;
+            $like->food_id = $request->food_id;
+            $like->user_id = Auth::user()->id;
+            $like->save();
+        }
+
+        //loadCountとすればリレーションの数を○○_countという形で取得できる（今回の場合はいいねの総数）
+        $foodLikesCount = $food->loadCount('like')->likes_count;
+
+        //一つの変数にajaxに渡す値をまとめる
+        //今回ぐらい少ない時は別にまとめなくてもいいけど一応。笑
+        $json = [
+            'foodLikesCount' => $foodLikesCount,
+        ];
+        //下記の記述でajaxに引数の値を返す
+        return response()->json($json);
+    }
+    
 }

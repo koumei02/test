@@ -25,7 +25,7 @@
     <h5 class="mb-3">メニュー</h5>
     <ul class="nav flex-column">
       <li class="nav-item">
-        <a class="nav-link" href="#">タイムライン</a>
+        <a class="nav-link" href="{{ route('auto.index') }}">タイムライン</a>
       </li>
       <li class="nav-item">
         <a class="nav-link" href="{{route('food.create')}}">食事記録</a>

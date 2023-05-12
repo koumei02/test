@@ -17,6 +17,9 @@
 
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css">
+    <script src="{{ asset('js/ajaxlike.js') }}" defer></script>
+
 </head>
 <body>
     <div id="app">

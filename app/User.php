@@ -36,4 +36,8 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+    public function like()
+    {
+        return $this->hasMany('App\Favorite'); //1対多の関係：likeが1でuserが多
+    }
 }
