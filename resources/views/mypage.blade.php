@@ -122,7 +122,17 @@
                     </thead>
                     <!-- ここに登録情報を表示する -->
                     <tbody>
-                    </tbody>
+                    
+                    @foreach($favorites as $mypage_fav)
+                        <tr>
+                            <th scpoe='col'>{{ $mypage_fav['date'] }}</th>
+                            <th scpoe='col'><img src="{{ asset('storage/images/'.$mypage_fav['image']) }}" class="img-fluid" alt="アイコン"></th>
+                            <th scpoe='col'>{{ $mypage_fav['menu'] }}</th>
+                            <th scpoe='col'>{{ $mypage_fav['recipe'] }}</th>
+                        </tr>
+                    @endforeach    
+
+                    
                 </table>
             </div>
         </div>

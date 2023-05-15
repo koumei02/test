@@ -17,32 +17,62 @@ class AutoController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         $weighting = new Weight;
         $fooding = new Food;
         $fav = new Favorite;
-
+        
+        
         $body = $weighting->all()->toArray();
-
+        
         $eat  = $fooding 
-                    ->join('users', 'foods.user_id', 'users.id')
-                    ->join('profiles', 'foods.user_id', 'profiles.user_id')->get();
-
-                    $eat = $fooding->orderBy('date', 'desc')->get();
-
+        ->join('users', 'foods.user_id', 'users.id')
+        ->join('profiles', 'foods.user_id', 'profiles.user_id')->get();
+        
+        
         $body  = $weighting 
-                    ->join('users', 'weights.user_id', 'users.id')
-                    ->join('profiles', 'weights.user_id', 'profiles.user_id')->get();
-                    
-                    $body  = $weighting->orderBy('date', 'desc')->get();
-                    
-
+        ->join('users', 'weights.user_id', 'users.id')
+        ->join('profiles', 'weights.user_id', 'profiles.user_id')->get();
+        // 日付検索した後も順番変更する必要あり
+        $eat = $fooding->orderBy('date', 'desc')->get();
+        $body  = $weighting->orderBy('date', 'desc')->get();
+        
+        
+        
+        $query = Food::query();
+        //テーブル結合
+        $query->join('users', function ($query) use ($request) {
+            $query->on('users.id', '=', 'foods.user_id');
+        })->join('profiles', function ($query) use ($request) {
+            $query->on('users.id', '=', 'profiles.user_id');
+            });
+            
+        // キーワード検索
+            $keyword = $request->input('keyword');
+            if(!empty($keyword)) {
+            $query->where('name', 'LIKE', "%{$keyword}%")
+            ->orWhere('menu', 'LIKE', "%{$keyword}%");
+        };
+        
+        
+        // 日付検索
+        $q = Food::query();
+        $from = $request->input('s-date');
+        $until = $request->input('e-date');
+        if (isset($from) && isset($until)) {
+            $query = $q->whereBetween("date", [$from, $until]);
+            $eat = $query->get();     
+        }
         return view('timeline',[
             'weight' => $body,
             'food' => $eat,
             'favorite' => $fav,
+            'from'=> $from,
+            'until' => $until,
+            'keyword' => $keyword,
         ]);
+        // return view('timeline', compact('id','recipe','menu'));
     }
 
     /**
@@ -93,6 +123,7 @@ class AutoController extends Controller
         $pro = $profiling->where('user_id', Auth::id())->get();
         $body = $weighting->where('user_id', Auth::id())->get();
         $eat = $fooding->where('user_id', Auth::id())->get();
+        $favorites = $fav->where('user_id', Auth::id())->get();
         
         $eat  = $fooding 
         ->join('users', 'foods.user_id', 'users.id')
@@ -100,11 +131,13 @@ class AutoController extends Controller
 
         $eat = $fooding->orderBy('date', 'desc')->get();
         
-        $body  = $weighting 
-        ->join('users', 'weights.user_id', 'users.id')
-        ->join('profiles', 'weights.user_id', 'profiles.user_id')->get();
-        
-        $body  = $weighting->orderBy('date', 'desc')->get();
+        $w_list  = $weighting 
+        ->join('users', 'weights.user_id', 'users.id')->where('weights.user_id', Auth::id());
+
+        $f_list = $fav
+        ->join('foods', 'favorites.food_id', 'foods.id')->where('favorites.user_id', Auth::id());
+        $favorites = $f_list->orderBy('favorites.created_at', 'desc')->get();
+
         
 
 
@@ -112,7 +145,7 @@ class AutoController extends Controller
             'profile' => $pro,
             'weight' => $body,
             'food' => $eat,
-            'favorite' => $fav,
+            'favorites' => $favorites,
         ]);    
 
 

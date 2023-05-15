@@ -1,4 +1,3 @@
-@extends('layouts.aside')
 @extends('layouts.app')
 @section('content')
 
@@ -6,55 +5,43 @@
 <div class="search">
   <div class="search">
         <form action="{{ route('auto.index') }}" method="GET">
-            <div>   
-                @csrf
+            @csrf
 
-                    <div class="nav-item">
-                    <div class='d-flex'>
-                    <label for="">日付
-                        <input type="date" class='start-form' name='s-date' id='date' value="{{ $from  }}" placeholder="">
-                        ～
-                        <input type="date" class='end-form' name='e-date' id='date' value="{{ $until }}" placeholder="">
-                    </label>
+          <div class="nav-item">
+            <div class='d-flex'>
+              <label for="">年齢
+                <input type="number" name="age" placeholder="年齢（下限）">
+                  ～
+                <input type="number" name="age" placeholder="年齢（上限）">
+              </label>
+            </div>
+          </div>
+
+            <div class="form-group">
+                <div>
+                    <label for="">キーワード
+                    <div>
+                        <input type="text" name="keyword" value="{{ $keyword }}">
                     </div>
+                    </label>
+                </div>      
+
+                <div>
+                    <label for="">性別
+                    <div>
+                        <select name="medium" data-toggle="select">
+                            <option value="">性別</option>
+                            <option value="0">男性</option>
+                            <option value="1">女性</option>
+                            <option value="2">その他</option>
+                        </select>
+                    </div>
+                    </label>
                 </div>
 
-                <div class="form-group">
-                    <div>
-                        <label for="">キーワード
-                        <div>
-                            <input type="text" name='keyword' value="({{ $keyword }}">
-                        </div>
-                        </label>
-                    </div>      
-
-                <div class="nav-item">
-                    <div class='d-flex'>
-                    <label for="">年齢
-                        <input type="number" name="age" placeholder="年齢（下限）">
-                        ～
-                        <input type="number" name="age" placeholder="年齢（上限）">
-                    </label>
-                    </div>
+                <div>
+                    <input type="submit" class="btn" value="検索">
                 </div>
-
-
-                    <div>
-                        <label for="">性別
-                        <div>
-                            <select name="medium" data-toggle="select">
-                                <option value="">性別</option>
-                                <option value="0">男性</option>
-                                <option value="1">女性</option>
-                                <option value="2">その他</option>
-                            </select>
-                        </div>
-                        </label>
-                    </div>
-
-                    <div>
-                        <input type="submit" class="btn" value="検索">
-                    </div>
             </div>
         </form>
     </div>

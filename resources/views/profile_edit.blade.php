@@ -29,7 +29,7 @@
                                 <textarea class='form-control' name='comment' ></textarea>
                                 <!-- ここにオールド関数入れる -->
                             <label for='number' class='mt-2' >身長</label>
-                                <input type='number' class='form-control w-25' step="0.1" min="0" name='height'>
+                                <input type='number' class='form-control w-25' step="0.1" min="0" name='height' >
 
 
                             <label for='number' class='mt-2' >目標体重</label>

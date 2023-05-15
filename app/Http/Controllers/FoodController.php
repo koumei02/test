@@ -84,6 +84,7 @@ class FoodController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
+    // 他人のマイページ
     public function show(int $id) {
         $profiling = new Profile;  
         $weighting = new Weight;
@@ -92,7 +93,9 @@ class FoodController extends Controller
         $other_p = Profile::find($id);
         // $other_w = Weight::where();
         // $other_f = Food::>where('user_id', $id)->get();
-        $pro = $profiling->where('user_id', $id)->get();
+        // $pro = $profiling->where('user_id', $id)->get();
+        $pro = $profiling->find($id);
+        // dd($pro);
         $body = $weighting->where('user_id', $id)->get();
         $eat = $fooding->where('user_id', $id)->get();
 
