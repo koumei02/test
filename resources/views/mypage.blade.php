@@ -20,20 +20,18 @@
                     </thead>
                     <tbody>
                     <!-- ここに登録情報を表示する -->
-                    @foreach($profile as $mypage_pro)
                         <tr>
-                            <th scpoe='col'><img src="{{ asset('storage/icons/'.$mypage_pro['icon']) }}"  class="img-fluid" alt="アイコン"></th>
-                            <th scpoe='col'>{{ $mypage_pro['age'] }}</th>
-                            <th scpoe='col'>{{ $mypage_pro['gender'] }}</th>
-                            <th scpoe='col'>{{ $mypage_pro['comment'] }}</th>
-                            <th scpoe='col'>{{ $mypage_pro['height'] }}</th>
+                            <th scpoe='col'><img src="{{ asset('storage/icons/'.$profile['icon']) }}"  class="img-fluid" alt="アイコン"></th>
+                            <th scpoe='col'>{{ $profile['age'] }}</th>
+                            <th scpoe='col'>{{ $profile['gender'] }}</th>
+                            <th scpoe='col'>{{ $profile['comment'] }}</th>
+                            <th scpoe='col'>{{ $profile['height'] }}</th>
                             <th scpoe='col'></th>
-                            <th scpoe='col'>{{ $mypage_pro['target_weight'] }}</th>
+                            <th scpoe='col'>{{ $profile['target_weight'] }}</th>
                             <th scpoe='col'></th>
-                            <th scpoe='col'>{{ $mypage_pro['target_fat'] }}</th>
+                            <th scpoe='col'>{{ $profile['target_fat'] }}</th>
                             <!-- latest()->first()で最新所法を取得して現体重、現体脂肪率を記入する-->
                         </tr>
-                    @endforeach    
                     </tbody>
                 </table>
             </div>
@@ -125,6 +123,7 @@
                     
                     @foreach($favorites as $mypage_fav)
                         <tr>
+                            
                             <th scpoe='col'>{{ $mypage_fav['date'] }}</th>
                             <th scpoe='col'><img src="{{ asset('storage/images/'.$mypage_fav['image']) }}" class="img-fluid" alt="アイコン"></th>
                             <th scpoe='col'>{{ $mypage_fav['menu'] }}</th>

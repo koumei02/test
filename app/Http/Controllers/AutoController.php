@@ -22,7 +22,8 @@ class AutoController extends Controller
         $weighting = new Weight;
         $fooding = new Food;
         $fav = new Favorite;
-        
+        $pro = new Profile;
+         
         
         $body = $weighting->all()->toArray();
         
@@ -64,6 +65,16 @@ class AutoController extends Controller
             $query = $q->whereBetween("date", [$from, $until]);
             $eat = $query->get();     
         }
+
+        $p = Profile::query();
+        $min = $request->input('s-age');
+        $max = $request->input('e-age');
+        if (isset($min) && isset($max)) {
+            $query = $p->whereBetween("age", [$min, $max]);
+            $pro = $query->get();     
+        }
+
+
         return view('timeline',[
             'weight' => $body,
             'food' => $eat,
@@ -120,17 +131,20 @@ class AutoController extends Controller
         $fooding = new Food;
         $fav = new Favorite;
 
-        $pro = $profiling->where('user_id', Auth::id())->get();
+        $pro = $profiling->find($id);
         $body = $weighting->where('user_id', Auth::id())->get();
         $eat = $fooding->where('user_id', Auth::id())->get();
         $favorites = $fav->where('user_id', Auth::id())->get();
         
         $eat  = $fooding 
-        ->join('users', 'foods.user_id', 'users.id')
-        ->join('profiles', 'foods.user_id', 'profiles.user_id')->get();
+        ->join('users', 'foods.user_id', 'users.id')->where('foods.user_id', Auth::id());
 
-        $eat = $fooding->orderBy('date', 'desc')->get();
-        
+        $e_list = $eat->orderBy('date', 'desc')->get();
+
+        // $e_list  = $fooding
+        // ->join('users', 'foods.user_id', 'users.id')->where('foods.user_id', Auth::id());
+
+
         $w_list  = $weighting 
         ->join('users', 'weights.user_id', 'users.id')->where('weights.user_id', Auth::id());
 
@@ -144,7 +158,7 @@ class AutoController extends Controller
         return view('mypage', [
             'profile' => $pro,
             'weight' => $body,
-            'food' => $eat,
+            'food' => $e_list,
             'favorites' => $favorites,
         ]);    
 

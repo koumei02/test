@@ -23,7 +23,7 @@
                     <div>
                         <label for="">キーワード
                         <div>
-                            <input type="text" name='keyword' value="({{ $keyword }}">
+                            <input type="text" name='keyword' value="{{ $keyword }}">
                         </div>
                         </label>
                     </div>      
@@ -31,9 +31,9 @@
                 <div class="nav-item">
                     <div class='d-flex'>
                     <label for="">年齢
-                        <input type="number" name="age" placeholder="年齢（下限）">
+                        <input type="number" name="s-age" value="" placeholder="年齢（下限）">
                         ～
-                        <input type="number" name="age" placeholder="年齢（上限）">
+                        <input type="number" name="e-age" value="" placeholder="年齢（上限）">
                     </label>
                     </div>
                 </div>
@@ -137,7 +137,7 @@
     
       <style>
         .search{
-            margin-left:500px;
+            margin-left:400px;
         }
 
         .loved i {

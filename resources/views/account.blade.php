@@ -11,15 +11,26 @@
                             <th scope='col'>年齢</th>
                             <th scope='col'>性別</th>
                             <th scope='col'>コメント</th>
+                            <th scope='col'>身長</th>
+                            <th scope='col'>現体重</th>
+                            <th scope='col'>目標体重</th>
+                            <th scope='col'>現体脂肪率</th>
+                            <th scope='col'>目標体脂肪率</th>
                         </tr>
                     </thead>
                     <tbody>
                     <!-- ここに登録情報を表示する -->
                         <tr>
                             <th scpoe='col'><img src="{{ asset('storage/icons/'.$profile['icon']) }}"  class="img-fluid" alt="アイコン"></th>
+
                             <th scpoe='col'>{{ $profile['age'] }}</th>
                             <th scpoe='col'>{{ $profile['gender'] }}</th>
                             <th scpoe='col'>{{ $profile['comment'] }}</th>
+                            <th scpoe='col'>{{ $profile['height'] }}</th>
+                            <th scpoe='col'></th>
+                            <th scpoe='col'>{{ $profile['target_weight'] }}</th>
+                            <th scpoe='col'></th>
+                            <th scpoe='col'>{{ $profile['target_fat'] }}</th>
                         </tr>
                     </tbody>
                 </table>

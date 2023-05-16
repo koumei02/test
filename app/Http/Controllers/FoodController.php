@@ -86,38 +86,43 @@ class FoodController extends Controller
      */
     // 他人のマイページ
     public function show(int $id) {
+        //詳細画面の表示。
         $profiling = new Profile;  
         $weighting = new Weight;
         $fooding = new Food;
+        $fav = new Favorite;
 
-        $other_p = Profile::find($id);
-        // $other_w = Weight::where();
-        // $other_f = Food::>where('user_id', $id)->get();
-        // $pro = $profiling->where('user_id', $id)->get();
         $pro = $profiling->find($id);
         // dd($pro);
         $body = $weighting->where('user_id', $id)->get();
         $eat = $fooding->where('user_id', $id)->get();
-
+        $favorites = $fav->where('user_id', $id)->get();
+        
         $eat  = $fooding 
-        ->join('users', 'foods.user_id', 'users.id')
-        ->join('profiles', 'foods.user_id', 'profiles.user_id')->get();
-
-        $eat = $fooding->orderBy('date', 'desc')->get();
+        ->join('users', 'foods.user_id', 'users.id')->where('foods.user_id', $id);
         
-        $body  = $weighting 
-        ->join('users', 'weights.user_id', 'users.id')
-        ->join('profiles', 'weights.user_id', 'profiles.user_id')->get();
-        
-        $body  = $weighting->orderBy('date', 'desc')->get();
 
+        $e_list = $eat->orderBy('date', 'desc')->get();
+        
+        $body = $weighting 
+        ->join('users', 'weights.user_id', 'users.id')->where('weights.user_id', $id);
+        $w_list = $body->orderBy('date', 'desc')->get();
+
+        $f_list = $fav
+        ->join('foods', 'favorites.food_id', 'foods.id')->where('favorites.user_id', $id);
+        $favorites = $f_list->orderBy('favorites.created_at', 'desc')->get();
+
+        
 
 
         return view('account', [
             'profile' => $pro,
-            'weight' => $body,
-            'food' => $eat,
-        ]);
+            'weight' => $w_list,
+            'food' => $e_list,
+            'favorites' => $favorites,
+        ]);    
+
+
     }
 
     /**
