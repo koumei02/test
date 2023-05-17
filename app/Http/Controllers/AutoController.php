@@ -19,24 +19,26 @@ class AutoController extends Controller
      */
     public function index(Request $request)
     {
+        
+        
         $weighting = new Weight;
         $fooding = new Food;
         $fav = new Favorite;
         $pro = new Profile;
-         
+        
         
         $body = $weighting->all()->toArray();
         
         $eat  = $fooding 
         ->join('users', 'foods.user_id', 'users.id')
-        ->join('profiles', 'foods.user_id', 'profiles.user_id')->get();
+        ->join('profiles', 'foods.user_id', 'profiles.user_id');
         
         
         $body  = $weighting 
         ->join('users', 'weights.user_id', 'users.id')
         ->join('profiles', 'weights.user_id', 'profiles.user_id')->get();
         // 日付検索した後も順番変更する必要あり
-        $eat = $fooding->orderBy('date', 'desc')->get();
+        $foodlist = $eat->orderBy('date', 'desc')->get();
         $body  = $weighting->orderBy('date', 'desc')->get();
         
         
@@ -47,11 +49,11 @@ class AutoController extends Controller
             $query->on('users.id', '=', 'foods.user_id');
         })->join('profiles', function ($query) use ($request) {
             $query->on('users.id', '=', 'profiles.user_id');
-            });
+        });
             
         // キーワード検索
-            $keyword = $request->input('keyword');
-            if(!empty($keyword)) {
+        $keyword = $request->input('keyword');
+        if(!empty($keyword)) {
             $query->where('name', 'LIKE', "%{$keyword}%")
             ->orWhere('menu', 'LIKE', "%{$keyword}%");
         };
@@ -65,7 +67,7 @@ class AutoController extends Controller
             $query = $q->whereBetween("date", [$from, $until]);
             $eat = $query->get();     
         }
-
+        
         $p = Profile::query();
         $min = $request->input('s-age');
         $max = $request->input('e-age');
@@ -74,16 +76,33 @@ class AutoController extends Controller
             $pro = $query->get();     
         }
 
+        $profile = $pro->where('user_id',Auth::id())->get();
+        dd($pro);
 
+        
         return view('timeline',[
             'weight' => $body,
-            'food' => $eat,
+            'food' => $foodlist,
             'favorite' => $fav,
             'from'=> $from,
             'until' => $until,
             'keyword' => $keyword,
         ]);
         // return view('timeline', compact('id','recipe','menu'));
+        $profile = $pro->where('user_id',Auth::id())->get();
+        //上記コードでprofileテーブルからログインしてる人の値が取れているかddで確認
+        if(!empty($profile)){ //empryページ遷移しなかったらif($profile == null)でやってみてください
+          return view('profile_edit');
+        }else{
+          return view('timeline',[
+              'weight' => $body,
+              'food' => $eat,
+              'favorite' => $fav,
+              'from'=> $from,
+              'until' => $until,
+              'keyword' => $keyword,
+          ]);
+        }
     }
 
     /**
@@ -130,8 +149,11 @@ class AutoController extends Controller
         $weighting = new Weight;
         $fooding = new Food;
         $fav = new Favorite;
-
+        
         $pro = $profiling->find($id);
+        // weightsテーブルから引っ張ってくる必要委があるからjoinをする？
+        // $p_list = $profiling->orderby('created_at','desc')->first();
+        // Profile::orderby('created_at','desc')->first();
         $body = $weighting->where('user_id', Auth::id())->get();
         $eat = $fooding->where('user_id', Auth::id())->get();
         $favorites = $fav->where('user_id', Auth::id())->get();
@@ -152,7 +174,6 @@ class AutoController extends Controller
         ->join('foods', 'favorites.food_id', 'foods.id')->where('favorites.user_id', Auth::id());
         $favorites = $f_list->orderBy('favorites.created_at', 'desc')->get();
 
-        
 
 
         return view('mypage', [

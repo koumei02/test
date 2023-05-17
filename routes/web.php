@@ -20,6 +20,7 @@ Route::group(['middleware' => 'auth'], function(){
     // Route::get('/', 'HomeController@index')->name('home');
     Route::resource('auto','AutoController');
     Route::resource('food','FoodController');
+    Route::resource('master','MasterController');
     Route::post('/ajaxlike', 'FoodController@ajaxlike')->name('food.ajaxlike');
 });
 

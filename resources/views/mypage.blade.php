@@ -23,7 +23,13 @@
                         <tr>
                             <th scpoe='col'><img src="{{ asset('storage/icons/'.$profile['icon']) }}"  class="img-fluid" alt="アイコン"></th>
                             <th scpoe='col'>{{ $profile['age'] }}</th>
-                            <th scpoe='col'>{{ $profile['gender'] }}</th>
+                                @if ($profile['gender'] == 0)
+                                    <th scope='col'>男性</th>
+                                @elseif ($profile['gender'] == 1)
+                                    <th scope='col'>女性</th>
+                                @elseif ($profile['gender'] == 2)
+                                    <th scope='col'>その他</th>
+                                @endif
                             <th scpoe='col'>{{ $profile['comment'] }}</th>
                             <th scpoe='col'>{{ $profile['height'] }}</th>
                             <th scpoe='col'></th>
@@ -112,6 +118,7 @@
                 <table class='table'>
                     <thead>
                         <tr>
+                            <th></th>
                             <th scope='col'>日付</th>
                             <th scope='col'>写真</th>
                             <th scope='col'>メニュー</th>
@@ -123,7 +130,7 @@
                     
                     @foreach($favorites as $mypage_fav)
                         <tr>
-                            
+                            <th scpoe='col'><img src="{{ asset('storage/icons/'.$mypage_fav['icon']) }}"  class="img-fluid" alt="アイコン"></th>
                             <th scpoe='col'>{{ $mypage_fav['date'] }}</th>
                             <th scpoe='col'><img src="{{ asset('storage/images/'.$mypage_fav['image']) }}" class="img-fluid" alt="アイコン"></th>
                             <th scpoe='col'>{{ $mypage_fav['menu'] }}</th>

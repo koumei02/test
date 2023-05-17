@@ -15,7 +15,7 @@
                             <input type="file" name="icon">
 
                             <label for='number' >年齢</label>
-                                <input type='number' class='form-control w-25' name='age'>
+                                <input type='number' class='form-control w-25' name='age' >
                             <label for='type' class='mt-2'>性別</label>
                             <select name='gender' class='form-control w-50'>
                                 <option value='' >選択してください</option>
