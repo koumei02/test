@@ -2,6 +2,7 @@
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\AutoController;
+use App\Http\Controllers\MasterController;
 
 
 /*
@@ -21,6 +22,8 @@ Route::group(['middleware' => 'auth'], function(){
     Route::resource('auto','AutoController');
     Route::resource('food','FoodController');
     Route::resource('master','MasterController');
+    Route::resource('mastersub','MasterSubController');
+    Route::resource('masteraccount','MasterAccountController');
     Route::post('/ajaxlike', 'FoodController@ajaxlike')->name('food.ajaxlike');
 });
 

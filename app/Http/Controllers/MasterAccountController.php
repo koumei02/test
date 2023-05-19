@@ -2,26 +2,26 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
-
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+
 use App\Weight;
 use App\Profile;
 use App\Food;
 use App\Favorite;
 
 
-class MasterController extends Controller
+
+class MasterAccountController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request)
+    public function index()
     {
-
+        //
     }
 
     /**
@@ -51,33 +51,9 @@ class MasterController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(int  $id)
+    public function show($id)
     {
-                //詳細画面の表示。
-                $profiling = new Profile;  
-                $weighting = new Weight;
-                $fooding = new Food;
-        
-                $pro = $profiling->find($id);
-                // dd($pro);
-                $body = $weighting->where('user_id', $id)->get();
-                $eat = $fooding->where('user_id', $id)->get();
-                
-                $eat  = $fooding 
-                ->join('users', 'foods.user_id', 'users.id')->where('foods.user_id', $id);
-        
-                $e_list = $eat->orderBy('date', 'desc')->get();
-                
-                $body = $weighting 
-                ->join('users', 'weights.user_id', 'users.id')->where('weights.user_id', $id);
-                $w_list = $body->orderBy('date', 'desc')->get();
-        
-                return view('account_check', [
-                    'profile' => $pro,
-                    'weight' => $w_list,
-                    'food' => $e_list,
-                ]);    
-        
+        //
     }
 
     /**
@@ -86,7 +62,7 @@ class MasterController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit(int  $id)
+    public function edit($id)
     {
         //
     }
@@ -98,7 +74,7 @@ class MasterController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, int  $id)
+    public function update(Request $request, $id)
     {
         //
     }
@@ -111,9 +87,9 @@ class MasterController extends Controller
      */
     public function destroy(int $id)
     {
-        $food = new Food;
-        $destory = $food->find($id);
-        // $delete = DB::table('foods')->find($id);
+        $users = new Profile;
+        $destory = $users->find($id);
+        // $delete = DB::table('weights')->find($id);
         $destory->delete();
 
         return redirect()->route('auto.index');

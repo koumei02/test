@@ -32,9 +32,9 @@
                                 @endif
                             <th scpoe='col'>{{ $profile['comment'] }}</th>
                             <th scpoe='col'>{{ $profile['height'] }}</th>
-                            <th scpoe='col'></th>
+                            <th scpoe='col'>{{ $profile['weight'] }}</th>
                             <th scpoe='col'>{{ $profile['target_weight'] }}</th>
-                            <th scpoe='col'></th>
+                            <th scpoe='col'>{{ $profile['fat'] }}</th>
                             <th scpoe='col'>{{ $profile['target_fat'] }}</th>
                             <!-- latest()->first()で最新所法を取得して現体重、現体脂肪率を記入する-->
                         </tr>

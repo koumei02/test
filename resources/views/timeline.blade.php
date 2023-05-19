@@ -8,6 +8,8 @@
         <form action="{{ route('auto.index') }}" method="GET">
             <div>   
                 @csrf
+<br>
+<br><br>
 
                     <div class="nav-item">
                     <div class='d-flex'>

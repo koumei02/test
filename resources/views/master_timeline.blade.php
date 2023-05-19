@@ -1,3 +1,8 @@
+@extends('layouts.app')
+@extends('layouts.aside')
+@section('content')
+
+
 <div class="search">
   <div class="search">
         <form action="{{ route('auto.index') }}" method="GET">
@@ -64,7 +69,7 @@
                                 <div class="card-haeder p-3 w-100 d-flex">
                                     <div class="ml-2 d-flex flex-column">
                                         @foreach($food as $timeline_eat)
-                                        <a href="{{ route('food.show',['food'=>$timeline_eat['user_id']]) }}">
+                                        <a href="{{ route('master.show',['master'=>$timeline_eat['user_id']]) }}">
                                             <img src="{{ asset('storage/icons/'.$timeline_eat['icon'])  }}" class="rounded-circle" width="50" height="50">
                                         </a>
                                         <p class="mb-0">{{ $timeline_eat['name'] }}</p>
@@ -72,15 +77,11 @@
                                         <p><img src="{{ asset('storage/images/'.$timeline_eat['image'])  }}"  width="300" height="150"></p>
                                         <p>{{ $timeline_eat['menu'] }}</p>
                                         <p>レシピ<br>{{ $timeline_eat['recipe'] }}</p>
-                                        @if($favorite->like_exist(Auth::user()->id,$timeline_eat['id']))
-                                        <p class="favorite-marke">
-                                        <button class="js-like-toggle loved" href="" data-foodid="{{ $timeline_eat['id'] }}"><i class="fas fa-heart"></i></button>
-                                        </p>
-                                        @else
-                                        <p class="favorite-marke">
-                                        <button class="js-like-toggle" href="" data-foodid="{{ $timeline_eat['id'] }}"><i class="fas fa-heart"></i></button>
-                                        </p>
-                                        @endif
+                                        <form action ="{{route('master.destroy',['master'=>$timeline_eat['id']])}}" method='POST'>
+                                            @method('delete')
+                                            @csrf
+                                            <button>削除</button>
+                                        </form>
                                         @endforeach
                                         
                                     </div>
@@ -115,6 +116,13 @@
                                     <p>日付　{{ $timeline_body['date'] }}</p>
                                     <p>体重　{{ $timeline_body['weight'] }}</p>
                                     <p>体脂肪率　{{ $timeline_body['fat'] }}</p>
+                                    <form action ="{{route('mastersub.destroy',['mastersub'=>$timeline_body['id']])}}" method='POST'>
+                                    @method('delete')
+                                        @csrf
+                                        <button>削除</button>
+                                     </form>
+
+
                                     <!-- <tr>
                                         <th scpoe='col'>{{ $timeline_body['date'] }}</th>
                                         <th scpoe='col'>{{ $timeline_body['weight'] }}</th>
@@ -130,12 +138,6 @@
         </div>
     </div>
     
-      <style>
-        .search{
-            margin-left:400px;
-        }
 
-        .loved i {
-        color: red !important;
-        }
-    </style>
+
+@endsection

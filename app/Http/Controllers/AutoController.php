@@ -31,7 +31,8 @@ class AutoController extends Controller
         
         $eat  = $fooding 
         ->join('users', 'foods.user_id', 'users.id')
-        ->join('profiles', 'foods.user_id', 'profiles.user_id');
+        ->join('profiles', 'foods.user_id', 'profiles.user_id')
+        ->select('foods.id', 'date', 'menu', 'recipe', 'material', 'calorie', 'image', 'foods.user_id');
         
         
         $body  = $weighting 
@@ -40,7 +41,6 @@ class AutoController extends Controller
         // 日付検索した後も順番変更する必要あり
         $foodlist = $eat->orderBy('date', 'desc')->get();
         $body  = $weighting->orderBy('date', 'desc')->get();
-        
         
         
         $query = Food::query();
@@ -54,7 +54,7 @@ class AutoController extends Controller
         // キーワード検索
         $keyword = $request->input('keyword');
         if(!empty($keyword)) {
-            $query->where('name', 'LIKE', "%{$keyword}%")
+            $query->orWhere('name', 'LIKE', "%{$keyword}%")
             ->orWhere('menu', 'LIKE', "%{$keyword}%");
         };
         
@@ -77,32 +77,45 @@ class AutoController extends Controller
         }
 
         $profile = $pro->where('user_id',Auth::id())->get();
-        dd($pro);
-
-        
-        return view('timeline',[
-            'weight' => $body,
-            'food' => $foodlist,
-            'favorite' => $fav,
-            'from'=> $from,
-            'until' => $until,
-            'keyword' => $keyword,
-        ]);
-        // return view('timeline', compact('id','recipe','menu'));
-        $profile = $pro->where('user_id',Auth::id())->get();
-        //上記コードでprofileテーブルからログインしてる人の値が取れているかddで確認
-        if(!empty($profile)){ //empryページ遷移しなかったらif($profile == null)でやってみてください
-          return view('profile_edit');
+        $user = Auth::user()->toArray();
+// dd($profile);
+        if($user['role'] == 0){
+            return view('timeline',[
+                'weight' => $body,
+                'food' => $foodlist,
+                'favorite' => $fav,
+                'from'=> $from,
+                'until' => $until,
+                'keyword' => $keyword,
+            ]);
+    
         }else{
-          return view('timeline',[
-              'weight' => $body,
-              'food' => $eat,
-              'favorite' => $fav,
-              'from'=> $from,
-              'until' => $until,
-              'keyword' => $keyword,
-          ]);
+            return view('master_timeline',[
+                'weight' => $body,
+                'food' => $foodlist,
+                'favorite' => $fav,
+                'from'=> $from,
+                'until' => $until,
+                'keyword' => $keyword,
+            ]);
+
         }
+        
+        // // return view('timeline', compact('id','recipe','menu'));
+        // $profile = $pro->where('user_id',Auth::id())->get();
+        // //上記コードでprofileテーブルからログインしてる人の値が取れているかddで確認
+        // if(!empty($profile)){ //empryページ遷移しなかったらif($profile == null)でやってみてください
+        //   return view('profile_edit');
+        // }else{
+        //   return view('timeline',[
+        //       'weight' => $body,
+        //       'food' => $eat,
+        //       'favorite' => $fav,
+        //       'from'=> $from,
+        //       'until' => $until,
+        //       'keyword' => $keyword,
+        //   ]);
+        // }
     }
 
     /**
@@ -174,6 +187,8 @@ class AutoController extends Controller
         ->join('foods', 'favorites.food_id', 'foods.id')->where('favorites.user_id', Auth::id());
         $favorites = $f_list->orderBy('favorites.created_at', 'desc')->get();
 
+        $pro= Profile::join('weights','profiles.user_id','weights.user_id')->where('weights.user_id',Auth::id())->orderby('weights.created_at','desc')->first();
+        // dd($pro);
 
 
         return view('mypage', [
@@ -195,8 +210,13 @@ class AutoController extends Controller
     public function edit($id)
     {
         //編集のフォームを表示させる。プロフィール画面
-
-        return view('profile_edit');
+        $profiling = new Profile;
+        $pro = $profiling->find($id);
+        // dd($pro);
+        // $gender_s
+        return view('profile_edit', [
+            'pro'=> $pro,
+        ]);
 
 
     }
