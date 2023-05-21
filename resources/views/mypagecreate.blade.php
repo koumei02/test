@@ -18,10 +18,10 @@
                                 <input type='number' class='form-control w-25' name='age' value ="">
                             <label for='type' class='mt-2'>性別</label>
                             <select name='gender' class='form-control w-50'>
-                                <option value='' >選択してください</option>
-                                    <option value='0' >男性</option>
-                                    <option value='1' >女性</option>
-                                    <option value='2' >その他</option>
+                                <option value='0' >選択してください</option>
+                                    <option value='1' >男性</option>
+                                    <option value='2' >女性</option>
+                                    <option value='3' >その他</option>
 
 
                             </select>

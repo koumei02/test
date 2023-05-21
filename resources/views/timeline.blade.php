@@ -35,8 +35,8 @@
                     <label for="">年代
                     <select name="age" data-toggle="select">
                                 <option value="">選択</option>
-                                <option value="10">10代</option>
-                                <option value="20">20代</option>
+                                <option value="11;12;13;14;15;16;17;18;19;20">10代</option>
+                                <option value="21;22;23;24;25;26;27;28;29">20代</option>
                                 <option value="30">30代</option>
                                 <option value="40">40代</option>
                                 <option value="50">50代</option>

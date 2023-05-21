@@ -18,7 +18,7 @@
                                 <input type='number' class='form-control w-25' name='age' value ="{{ $pro['age']}}">
                             <label for='type' class='mt-2'>性別</label>
                             <select name='gender' class='form-control w-50'>
-                                <option value='' >選択してください</option>
+                                <option value='0' >選択してください</option>
                                 @if ($pro['gender'] == 1)
                                     <option value='1' selected>男性</option>
                                     <option value='2' >女性</option>
@@ -33,6 +33,10 @@
                                     <option value='3' selected>その他</option>
                                     <option value='1' >男性</option>
                                     <option value='2' >女性</option>
+                                @elseif ($pro['gender'] == 0)
+                                    <option value='1' >男性</option>
+                                    <option value='2' >女性</option>
+                                    <option value='3'>その他</option>
                                 @endif
 
                             </select>

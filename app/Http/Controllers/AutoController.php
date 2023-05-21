@@ -74,6 +74,7 @@ class AutoController extends Controller
         $gen = $request->input('medium');
         if (!empty($gen)) {
             $query->where("gender", $gen);
+            
         }
         
         // dd($gen);
