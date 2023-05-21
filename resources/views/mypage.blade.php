@@ -21,13 +21,14 @@
                     <tbody>
                     <!-- ここに登録情報を表示する -->
                         <tr>
+                            
                             <th scpoe='col'><img src="{{ asset('storage/icons/'.$profile['icon']) }}"  class="img-fluid" alt="アイコン"></th>
                             <th scpoe='col'>{{ $profile['age'] }}</th>
-                                @if ($profile['gender'] == 0)
+                                @if ($profile['gender'] == 1)
                                     <th scope='col'>男性</th>
-                                @elseif ($profile['gender'] == 1)
-                                    <th scope='col'>女性</th>
                                 @elseif ($profile['gender'] == 2)
+                                    <th scope='col'>女性</th>
+                                @elseif ($profile['gender'] == 3)
                                     <th scope='col'>その他</th>
                                 @endif
                             <th scpoe='col'>{{ $profile['comment'] }}</th>

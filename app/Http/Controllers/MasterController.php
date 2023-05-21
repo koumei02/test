@@ -31,7 +31,7 @@ class MasterController extends Controller
      */
     public function create()
     {
-        //
+        return view('mypagecreate');
     }
 
     /**
@@ -42,7 +42,24 @@ class MasterController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $profiling = new Profile;
+            $file_name = $request->file('icon')->getClientOriginalName();
+            $request->file('icon')->storeAs('public/icons', $file_name);
+    
+            $profiling->icon = $file_name;
+            $profiling->comment = $request->comment;
+            $profiling->gender = $request->gender;
+            $profiling->age = $request->age;
+            $profiling->height = $request->height;
+            $profiling->target_weight = $request->target_weight;
+            $profiling->target_fat = $request->target_fat;
+            $profiling->user_id =Auth::id();
+    
+
+            $profiling->save();
+
+            return redirect('auto');
+
     }
 
     /**

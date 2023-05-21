@@ -16,7 +16,9 @@ use App\Http\Controllers\MasterController;
 |
 */
 Auth::routes();
-
+Route::get('/', function () {
+    return view('auth.login');
+});
 Route::group(['middleware' => 'auth'], function(){
     // Route::get('/', 'HomeController@index')->name('home');
     Route::resource('auto','AutoController');

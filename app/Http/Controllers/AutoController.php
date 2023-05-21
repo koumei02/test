@@ -3,7 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\Auth;
-
+use App\Http\Requests\CreateWeight;
+use App\Http\Requests\CreateProfile;
 use Illuminate\Http\Request;
 use App\Weight;
 use App\Profile;
@@ -50,7 +51,6 @@ class AutoController extends Controller
         })->join('profiles', function ($query) use ($request) {
             $query->on('users.id', '=', 'profiles.user_id');
         });
-            
         // キーワード検索
         $keyword = $request->input('keyword');
         if(!empty($keyword)) {
@@ -60,25 +60,27 @@ class AutoController extends Controller
         
         
         // 日付検索
-        $q = Food::query();
         $from = $request->input('s-date');
         $until = $request->input('e-date');
         if (isset($from) && isset($until)) {
-            $query = $q->whereBetween("date", [$from, $until]);
-            $eat = $query->get();     
+            $query = $query->whereBetween("date", [$from, $until]);
         }
         
-        $p = Profile::query();
-        $min = $request->input('s-age');
-        $max = $request->input('e-age');
-        if (isset($min) && isset($max)) {
-            $query = $p->whereBetween("age", [$min, $max]);
-            $pro = $query->get();     
+        $min = $request->input('age');
+        // dd($min);
+        if (!empty($min)) {
+            $query = $query->where("age", "LIKE", $min);
         }
+        $gen = $request->input('medium');
+        if (!empty($gen)) {
+            $query->where("gender", $gen);
+        }
+        
+        // dd($gen);
+        $items = $query->get();
 
         $profile = $pro->where('user_id',Auth::id())->get();
         $user = Auth::user()->toArray();
-// dd($profile);
         if($user['role'] == 0){
             return view('timeline',[
                 'weight' => $body,
@@ -87,6 +89,7 @@ class AutoController extends Controller
                 'from'=> $from,
                 'until' => $until,
                 'keyword' => $keyword,
+                'items' => $items,
             ]);
     
         }else{
@@ -172,7 +175,7 @@ class AutoController extends Controller
         $favorites = $fav->where('user_id', Auth::id())->get();
         
         $eat  = $fooding 
-        ->join('users', 'foods.user_id', 'users.id')->where('foods.user_id', Auth::id());
+        ->join('users', 'foods.user_id', 'users.id')->select('users.*','foods.*','users.id as useid')->where('foods.user_id', Auth::id());
 
         $e_list = $eat->orderBy('date', 'desc')->get();
 
@@ -187,8 +190,10 @@ class AutoController extends Controller
         ->join('foods', 'favorites.food_id', 'foods.id')->where('favorites.user_id', Auth::id());
         $favorites = $f_list->orderBy('favorites.created_at', 'desc')->get();
 
-        $pro= Profile::join('weights','profiles.user_id','weights.user_id')->where('weights.user_id',Auth::id())->orderby('weights.created_at','desc')->first();
-        // dd($pro);
+        $pro= Profile::join('weights','profiles.user_id','weights.user_id')->select('weights.*','profiles.*','weights.comment as wcomment')->where('weights.user_id',$id)->orderby('weights.created_at','desc')->first();
+        // $pro= Profile::join('weights','profiles.user_id','weights.user_id')
+        // ->join('users','profiles.user_id','users.id')
+        // ->select('weights.*','profiles.*','weights.comment as wcomment')->orderby('weights.created_at','desc')->first();
 
 
         return view('mypage', [
@@ -211,9 +216,10 @@ class AutoController extends Controller
     {
         //編集のフォームを表示させる。プロフィール画面
         $profiling = new Profile;
-        $pro = $profiling->find($id);
-        // dd($pro);
-        // $gender_s
+        $pro = $profiling->where('user_id', $id)->first();
+        if($pro == null){
+            return view('mypagecreate');
+        }
         return view('profile_edit', [
             'pro'=> $pro,
         ]);
@@ -233,24 +239,6 @@ class AutoController extends Controller
         //編集処理を行う。保存について
         $profiling = new Profile;
         $profile = $profiling->find($id);
-        if(empty($profile)){
-            $file_name = $request->file('icon')->getClientOriginalName();
-            $request->file('icon')->storeAs('public/icons', $file_name);
-    
-            $profiling->icon = $file_name;
-            $profiling->comment = $request->comment;
-            $profiling->gender = $request->gender;
-            $profiling->age = $request->age;
-            $profiling->height = $request->height;
-            $profiling->target_weight = $request->target_weight;
-            $profiling->target_fat = $request->target_fat;
-            $profiling->user_id = Auth::id();
-    
-
-            $profiling->save();
-    
-        }
-        else{
             $file_name = $request->file('icon')->getClientOriginalName();
             $request->file('icon')->storeAs('public/icons', $file_name);
 
@@ -261,12 +249,9 @@ class AutoController extends Controller
             $profile->height = $request->height;
             $profile->target_weight = $request->target_weight;
             $profile->target_fat = $request->target_fat;
-            $profile->user_id = Auth::id();
+            $profile->user_id = $id;
     
             $profile->save();
-
-        }
-
     
         return redirect('auto');
     }
@@ -280,8 +265,8 @@ class AutoController extends Controller
     public function destroy($id)
     {
         //削除処理。投稿内容の削除。
-        $delete = Food::find($id);
-        $delete->delete();
+        $destory = Food::find($id);
+        $destory->delete();
 
         return redirect()->route('auto.show',['auto' => Auth::id()]);
 

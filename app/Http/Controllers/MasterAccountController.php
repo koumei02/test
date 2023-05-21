@@ -4,11 +4,14 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+
 
 use App\Weight;
 use App\Profile;
 use App\Food;
 use App\Favorite;
+use App\User;
 
 
 
@@ -87,7 +90,7 @@ class MasterAccountController extends Controller
      */
     public function destroy(int $id)
     {
-        $users = new Profile;
+        $users = new User;
         $destory = $users->find($id);
         // $delete = DB::table('weights')->find($id);
         $destory->delete();

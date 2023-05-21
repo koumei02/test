@@ -8,6 +8,20 @@
                 </div>
                 <div class="card-body">
                     <div class="card-body">
+                        <div class="error">
+                            @if($errors->any())
+                            <div class="alert alert-danger">
+                                <ul>
+                                    @foreach($errors->all() as $message)
+                                    <li>{{ $message }}</li>
+                                    @endforeach
+                                </ul>
+                            </div>
+                            @endif
+                        </div>
+
+
+
                         <form action="{{ route('food.store')}}" method="post" enctype="multipart/form-data">
                             @csrf
                             <label for='date' class='mt-2'>日付</label>

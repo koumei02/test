@@ -12,43 +12,43 @@
                         <form action="{{route('auto.update', ['auto' => Auth::id()])}}" method="post" enctype="multipart/form-data">
                             @method('put')
                             @csrf
-                            <input type="file" name="icon">
+                            <input type="file" name="icon" required>
 
                             <label for='number' >年齢</label>
-                                <input type='number' class='form-control w-25' name='age' value ="{{ $pro['age'] }}">
+                                <input type='number' class='form-control w-25' name='age' value ="{{ $pro['age']}}">
                             <label for='type' class='mt-2'>性別</label>
                             <select name='gender' class='form-control w-50'>
                                 <option value='' >選択してください</option>
-                                @if ($pro['gender'] == 0)
-                                    <option scope='col' selected>男性</option>
-                                    <option value='1' >女性</option>
-                                    <option value='2' >その他</option>
-
-                                @elseif ($pro['gender'] == 1)
-                                    <option scope='col' selected>女性</option>
-                                    <option scope='col' >男性</option>
-                                    <option value='2' >その他</option>
+                                @if ($pro['gender'] == 1)
+                                    <option value='1' selected>男性</option>
+                                    <option value='2' >女性</option>
+                                    <option value='3' >その他</option>
 
                                 @elseif ($pro['gender'] == 2)
-                                    <option scope='col' selected>その他</option>
-                                    <option scope='col' >男性</option>
-                                    <option scope='col' >女性</option>
+                                    <option value='2' selected>女性</option>
+                                    <option value='1' >男性</option>
+                                    <option value='3' >その他</option>
+
+                                @elseif ($pro['gender'] == 3)
+                                    <option value='3' selected>その他</option>
+                                    <option value='1' >男性</option>
+                                    <option value='2' >女性</option>
                                 @endif
 
                             </select>
 
                             </select>
                             <label for='comment' class='mt-2' >コメント</label>
-                                <textarea class='form-control' name='comment' value ="">{{ $pro['comment'] }}</textarea>
+                                <textarea class='form-control' name='comment' value ="">{{ $pro['comment']}}</textarea>
                                 <!-- ここにオールド関数入れる -->
                             <label for='number' class='mt-2' >身長</label>
-                                <input type='number' class='form-control w-25' step="0.1" min="0" name='height' value ="{{ $pro['height'] }}">
+                                <input type='number' class='form-control w-25' step="0.1" min="0" name='height' value ="{{ $pro['height']}}">
 
 
                             <label for='number' class='mt-2' >目標体重</label>
-                                <input type='number' class='form-control w-25' step="0.1" min="0" name='target_weight' value ="{{ $pro['target_weight'] }}">
+                                <input type='number' class='form-control w-25' step="0.1" min="0" name='target_weight' value ="{{ $pro['target_weight']}}">
                             <label for='number' class='mt-2'>目標体脂肪率</label>
-                                <input type='number' class='form-control w-25' step="0.1" min="0" name='target_fat' value ="{{ $pro['target_fat'] }}">
+                                <input type='number' class='form-control w-25' step="0.1" min="0" name='target_fat' value ="{{ $pro['target_fat']}}">
 
                             <div>
                                 <button type='submit' class='btn btn-primary w-15 mt-3 mr-auto'>登録</button>

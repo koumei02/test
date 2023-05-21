@@ -26,6 +26,20 @@
             <div class="card">
                 <div class="card-header">体重・体脂肪記録</div>
                     <div class="m-4 ml-5">
+
+                         <div class="error">
+                            @if($errors->any())
+                            <div class="alert alert-danger">
+                                <ul>
+                                    @foreach($errors->all() as $message)
+                                    <li>{{ $message }}</li>
+                                    @endforeach
+                                </ul>
+                            </div>
+                            @endif
+                        </div>
+
+
                         <form action="{{ route('auto.store')}}" method="post">
                            @csrf
                            <fieldset>

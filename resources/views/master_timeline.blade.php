@@ -1,5 +1,4 @@
 @extends('layouts.app')
-@extends('layouts.aside')
 @section('content')
 
 
@@ -28,12 +27,18 @@
                         </label>
                     </div>      
 
-                <div class="nav-item">
+                    <div class="nav-item">
                     <div class='d-flex'>
-                    <label for="">年齢
-                        <input type="number" name="s-age" value="" placeholder="年齢（下限）">
-                        ～
-                        <input type="number" name="e-age" value="" placeholder="年齢（上限）">
+                    <label for="">年代
+                    <select name="age" data-toggle="select">
+                                <option value="">選択</option>
+                                <option value="10">10代</option>
+                                <option value="20">20代</option>
+                                <option value="30">30代</option>
+                                <option value="40">40代</option>
+                                <option value="50">50代</option>
+                                <option value="60">60代</option>
+                            </select>
                     </label>
                     </div>
                 </div>
@@ -41,14 +46,14 @@
 
                     <div>
                         <label for="">性別
-                        <div>
+                        <form>
                             <select name="medium" data-toggle="select">
                                 <option value="">性別</option>
-                                <option value="0">男性</option>
-                                <option value="1">女性</option>
-                                <option value="2">その他</option>
+                                <option value="1">男性</option>
+                                <option value="2">女性</option>
+                                <option value="3">その他</option>
                             </select>
-                        </div>
+                        </form>
                         </label>
                     </div>
 
