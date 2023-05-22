@@ -55,25 +55,6 @@ class FoodController extends Controller
         $fooding->recipe = $request -> recipe;
         $fooding->image = $file_name;
         $fooding->user_id = Auth::id();
-
-    //    $date = $request -> date;
-    //    $menu = $request -> menu;
-    //    $calorie = $request -> calorie;
-    //    $material = $request -> material;
-    //    $recipe = $request -> recipe;
-    //    $image = $file_name;
-    //    $user_id = Auth::id();
-
-
-        // Food::create([
-        //     'date'=>$date,
-        //     'menu'=>$menu,
-        //     'calorie'=>$calorie,
-        //     'recipe'=>$recipe,
-        //     'material'=>$material,
-        //     'image'=>$image->storeAs('public/images', $file_name),
-        //     'user_id'=>$user_id,
-        // ]);
         $fooding->save();
 
         return redirect('auto');
@@ -113,17 +94,12 @@ class FoodController extends Controller
         ->join('foods', 'favorites.food_id', 'foods.id')->where('favorites.user_id', $id);
         $favorites = $f_list->orderBy('favorites.created_at', 'desc')->get();
 
-        
-
-
         return view('account', [
             'profile' => $pro,
             'weight' => $w_list,
             'food' => $e_list,
             'favorites' => $favorites,
         ]);    
-
-
     }
 
     /**

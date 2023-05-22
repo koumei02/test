@@ -20,13 +20,10 @@ class AutoController extends Controller
      */
     public function index(Request $request)
     {
-        
-        
         $weighting = new Weight;
         $fooding = new Food;
         $fav = new Favorite;
         $pro = new Profile;
-        
         
         $body = $weighting->all()->toArray();
         
@@ -35,93 +32,87 @@ class AutoController extends Controller
         ->join('profiles', 'foods.user_id', 'profiles.user_id')
         ->select('foods.id', 'date', 'menu', 'recipe', 'material', 'calorie', 'image', 'foods.user_id');
         
-        
         $body  = $weighting 
         ->join('users', 'weights.user_id', 'users.id')
-        ->join('profiles', 'weights.user_id', 'profiles.user_id')->get();
+        ->join('profiles', 'weights.user_id', 'profiles.user_id');
         // 日付検索した後も順番変更する必要あり
         $foodlist = $eat->orderBy('date', 'desc')->get();
-        $body  = $weighting->orderBy('date', 'desc')->get();
+        $weightlist  = $body->orderBy('date', 'desc')->get();
+        $w_items  = $body->orderBy('date', 'desc')->get();
+        $items = $eat->orderBy('date', 'desc')->get();
         
-        
-        $query = Food::query();
         //テーブル結合
+        $query = Food::query();
         $query->join('users', function ($query) use ($request) {
             $query->on('users.id', '=', 'foods.user_id');
         })->join('profiles', function ($query) use ($request) {
             $query->on('users.id', '=', 'profiles.user_id');
-        });
+        })->select('users.*','foods.*','profiles.*','foods.id as foodid');
+        //テーブル結合
+        $w_query = Weight::query();
+        $w_query->join('users', function ($query) use ($request) {
+            $query->on('users.id', '=', 'weights.user_id');
+        })->join('profiles', function ($query) use ($request) {
+            $query->on('users.id', '=', 'profiles.user_id');
+        })->select('users.*','weights.*','profiles.*','weights.id as weightid');
         // キーワード検索
         $keyword = $request->input('keyword');
         if(!empty($keyword)) {
             $query->orWhere('name', 'LIKE', "%{$keyword}%")
             ->orWhere('menu', 'LIKE', "%{$keyword}%");
         };
-        
-        
         // 日付検索
         $from = $request->input('s-date');
         $until = $request->input('e-date');
         if (isset($from) && isset($until)) {
             $query = $query->whereBetween("date", [$from, $until]);
         }
-        
         $min = $request->input('age');
-        // dd($min);
+        $age = explode("~",$min);
         if (!empty($min)) {
-            $query = $query->where("age", "LIKE", $min);
+            $query = $query->whereBetween("age", [$age[0], $age[1]]);
         }
         $gen = $request->input('medium');
         if (!empty($gen)) {
             $query->where("gender", $gen);
-            
         }
-        
-        // dd($gen);
         $items = $query->get();
-
-        $profile = $pro->where('user_id',Auth::id())->get();
+        $w_items = $w_query->get();
+        $profile = $pro->where('user_id',Auth::id())->first();
         $user = Auth::user()->toArray();
-        if($user['role'] == 0){
+
+
+        if($user['role']== 0 && $profile == null ){
+            return view('mypagecreate');
+        }elseif($user['role']== 0){
             return view('timeline',[
-                'weight' => $body,
+                'weight' => $weightlist,
                 'food' => $foodlist,
                 'favorite' => $fav,
                 'from'=> $from,
                 'until' => $until,
                 'keyword' => $keyword,
                 'items' => $items,
+                'w_items' => $w_items,
+                'min' =>$min,
+                'gen' => $gen,
             ]);
-    
         }else{
             return view('master_timeline',[
-                'weight' => $body,
+                'weight' => $weightlist,
                 'food' => $foodlist,
                 'favorite' => $fav,
                 'from'=> $from,
                 'until' => $until,
                 'keyword' => $keyword,
+                'items' => $items,
+                'w_items' => $w_items,
+                'min' =>$min,
+                'gen' => $gen,
             ]);
 
         }
-        
-        // // return view('timeline', compact('id','recipe','menu'));
-        // $profile = $pro->where('user_id',Auth::id())->get();
-        // //上記コードでprofileテーブルからログインしてる人の値が取れているかddで確認
-        // if(!empty($profile)){ //empryページ遷移しなかったらif($profile == null)でやってみてください
-        //   return view('profile_edit');
-        // }else{
-        //   return view('timeline',[
-        //       'weight' => $body,
-        //       'food' => $eat,
-        //       'favorite' => $fav,
-        //       'from'=> $from,
-        //       'until' => $until,
-        //       'keyword' => $keyword,
-        //   ]);
-        // }
     }
-
     /**
      * Show the form for creating a new resource.
      *
@@ -168,9 +159,6 @@ class AutoController extends Controller
         $fav = new Favorite;
         
         $pro = $profiling->find($id);
-        // weightsテーブルから引っ張ってくる必要委があるからjoinをする？
-        // $p_list = $profiling->orderby('created_at','desc')->first();
-        // Profile::orderby('created_at','desc')->first();
         $body = $weighting->where('user_id', Auth::id())->get();
         $eat = $fooding->where('user_id', Auth::id())->get();
         $favorites = $fav->where('user_id', Auth::id())->get();
@@ -179,11 +167,6 @@ class AutoController extends Controller
         ->join('users', 'foods.user_id', 'users.id')->select('users.*','foods.*','users.id as useid')->where('foods.user_id', Auth::id());
 
         $e_list = $eat->orderBy('date', 'desc')->get();
-
-        // $e_list  = $fooding
-        // ->join('users', 'foods.user_id', 'users.id')->where('foods.user_id', Auth::id());
-
-
         $w_list  = $weighting 
         ->join('users', 'weights.user_id', 'users.id')->where('weights.user_id', Auth::id());
 
@@ -191,17 +174,15 @@ class AutoController extends Controller
         ->join('foods', 'favorites.food_id', 'foods.id')->where('favorites.user_id', Auth::id());
         $favorites = $f_list->orderBy('favorites.created_at', 'desc')->get();
 
-        $pro= Profile::join('weights','profiles.user_id','weights.user_id')->select('weights.*','profiles.*','weights.comment as wcomment')->where('weights.user_id',$id)->orderby('weights.created_at','desc')->first();
-        // $pro= Profile::join('weights','profiles.user_id','weights.user_id')
-        // ->join('users','profiles.user_id','users.id')
-        // ->select('weights.*','profiles.*','weights.comment as wcomment')->orderby('weights.created_at','desc')->first();
-
+        $pro= Profile::join('weights','profiles.user_id','weights.user_id')->select('weights.*','profiles.*','weights.comment as wcomment')->where('profiles.user_id',$id)->orderby('weights.date','desc')->first();
+        $profile = $profiling->find($id);
 
         return view('mypage', [
-            'profile' => $pro,
+            'pro' => $pro,
             'weight' => $body,
             'food' => $e_list,
             'favorites' => $favorites,
+            'profile' => $profile,
         ]);    
 
 
@@ -273,3 +254,4 @@ class AutoController extends Controller
 
     }
 }
+

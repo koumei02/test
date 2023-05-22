@@ -21,7 +21,97 @@ class MasterController extends Controller
      */
     public function index(Request $request)
     {
+        $weighting = new Weight;
+        $fooding = new Food;
+        $fav = new Favorite;
+        $pro = new Profile;
+        
+        $body = $weighting->all()->toArray();
+        
+        $eat  = $fooding 
+        ->join('users', 'foods.user_id', 'users.id')
+        ->join('profiles', 'foods.user_id', 'profiles.user_id')
+        ->select('foods.id', 'date', 'menu', 'recipe', 'material', 'calorie', 'image', 'foods.user_id');
+        
+        $body  = $weighting 
+        ->join('users', 'weights.user_id', 'users.id')
+        ->join('profiles', 'weights.user_id', 'profiles.user_id');
+        // 日付検索した後も順番変更する必要あり
+        $foodlist = $eat->orderBy('date', 'desc')->get();
+        $weightlist  = $body->orderBy('date', 'desc')->get();
+        $w_items  = $body->orderBy('date', 'desc')->get();
+        $items = $eat->orderBy('date', 'desc')->get();
+        
+        //テーブル結合
+        $query = Food::query();
+        $query->join('users', function ($query) use ($request) {
+            $query->on('users.id', '=', 'foods.user_id');
+        })->join('profiles', function ($query) use ($request) {
+            $query->on('users.id', '=', 'profiles.user_id');
+        })->select('users.*','foods.*','profiles.*','foods.id as foodid');
+        //テーブル結合
+        $w_query = Weight::query();
+        $w_query->join('users', function ($query) use ($request) {
+            $query->on('users.id', '=', 'weights.user_id');
+        })->join('profiles', function ($query) use ($request) {
+            $query->on('users.id', '=', 'profiles.user_id');
+        })->select('users.*','weights.*','profiles.*','weights.id as weightid');
+        // キーワード検索
+        $keyword = $request->input('keyword');
+        if(!empty($keyword)) {
+            $query->orWhere('name', 'LIKE', "%{$keyword}%")
+            ->orWhere('menu', 'LIKE', "%{$keyword}%");
+        };
+        // 日付検索
+        $from = $request->input('s-date');
+        $until = $request->input('e-date');
+        if (isset($from) && isset($until)) {
+            $query = $query->whereBetween("date", [$from, $until]);
+        }
+        $min = $request->input('age');
+        $age = explode("~",$min);
+        if (!empty($min)) {
+            $query = $query->whereBetween("age", [$age[0], $age[1]]);
+        }
+        $gen = $request->input('medium');
+        if (!empty($gen)) {
+            $query->where("gender", $gen);
+        }
+        $items = $query->get();
+        $w_items = $w_query->get();
+        $profile = $pro->where('user_id',Auth::id())->first();
+        $user = Auth::user()->toArray();
 
+
+        if($user['role']== 0 && $profile == null ){
+            return view('mypagecreate');
+        }elseif($user['role']== 0){
+            return view('timeline',[
+                'weight' => $weightlist,
+                'food' => $foodlist,
+                'favorite' => $fav,
+                'from'=> $from,
+                'until' => $until,
+                'keyword' => $keyword,
+                'items' => $items,
+                'w_items' => $w_items,
+                'min' =>$min,
+                'gen' => $gen,
+            ]);
+        }else{
+            return view('master_timeline',[
+                'weight' => $weightlist,
+                'food' => $foodlist,
+                'favorite' => $fav,
+                'from'=> $from,
+                'until' => $until,
+                'keyword' => $keyword,
+                'items' => $items,
+                'w_items' => $w_items,
+                'min' =>$min,
+                'gen' => $gen,
+            ]);
+        }
     }
 
     /**
@@ -70,31 +160,22 @@ class MasterController extends Controller
      */
     public function show(int  $id)
     {
-                //詳細画面の表示。
-                $profiling = new Profile;  
-                $weighting = new Weight;
-                $fooding = new Food;
-        
-                $pro = $profiling->find($id);
-                // dd($pro);
-                $body = $weighting->where('user_id', $id)->get();
-                $eat = $fooding->where('user_id', $id)->get();
-                
-                $eat  = $fooding 
-                ->join('users', 'foods.user_id', 'users.id')->where('foods.user_id', $id);
-        
-                $e_list = $eat->orderBy('date', 'desc')->get();
-                
-                $body = $weighting 
-                ->join('users', 'weights.user_id', 'users.id')->where('weights.user_id', $id);
-                $w_list = $body->orderBy('date', 'desc')->get();
-        
-                return view('account_check', [
-                    'profile' => $pro,
-                    'weight' => $w_list,
-                    'food' => $e_list,
-                ]);    
-        
+        $profiling = new Profile;  
+        $weighting = new Weight;
+        $fooding = new Food;
+
+        $pro = $profiling->find($id);
+        // dd($pro);
+        $body = $weighting->where('user_id', $id)->orderBy('date', 'desc')->get();
+        $eat = $fooding->where('user_id', $id)->orderBy('date', 'desc')->get();
+
+        return view('account_check', [
+            'profile' => $pro,
+            'weight' => $body,
+            'food' => $eat,
+        ]);    
+
+
     }
 
     /**

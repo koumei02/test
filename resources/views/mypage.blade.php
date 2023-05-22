@@ -20,8 +20,8 @@
                     </thead>
                     <tbody>
                     <!-- ここに登録情報を表示する -->
+                    @if(empty($pro))
                         <tr>
-                            
                             <th scpoe='col'><img src="{{ asset('storage/icons/'.$profile['icon']) }}"  class="img-fluid" alt="アイコン"></th>
                             <th scpoe='col'>{{ $profile['age'] }}</th>
                                 @if ($profile['gender'] == 1)
@@ -33,86 +33,108 @@
                                 @endif
                             <th scpoe='col'>{{ $profile['comment'] }}</th>
                             <th scpoe='col'>{{ $profile['height'] }}</th>
-                            <th scpoe='col'>{{ $profile['weight'] }}</th>
                             <th scpoe='col'>{{ $profile['target_weight'] }}</th>
-                            <th scpoe='col'>{{ $profile['fat'] }}</th>
                             <th scpoe='col'>{{ $profile['target_fat'] }}</th>
                             <!-- latest()->first()で最新所法を取得して現体重、現体脂肪率を記入する-->
                         </tr>
+                        @else
+                        <tr>                            
+                            <th scpoe='col'><img src="{{ asset('storage/icons/'.$pro['icon']) }}"  class="img-fluid" alt="アイコン"></th>
+                            <th scpoe='col'>{{ $pro['age'] }}</th>
+                                @if ($pro['gender'] == 1)
+                                    <th scope='col'>男性</th>
+                                @elseif ($pro['gender'] == 2)
+                                    <th scope='col'>女性</th>
+                                @elseif ($pro['gender'] == 3)
+                                    <th scope='col'>その他</th>
+                                @endif
+                            <th scpoe='col'>{{ $pro['comment'] }}</th>
+                            <th scpoe='col'>{{ $pro['height'] }}</th>
+                            <th scpoe='col'>{{ $pro['weight']}}</th>
+                            <th scpoe='col'>{{ $pro['target_weight'] }}</th>
+                            <th scpoe='col'>{{ $pro['fat'] }}</th>
+                            <th scpoe='col'>{{ $pro['target_fat'] }}</th>
+                            <!-- latest()->first()で最新所法を取得して現体重、現体脂肪率を記入する-->
+                        </tr>
+                        @endif
                     </tbody>
                 </table>
             </div>
         </div>
     </div>
-
-    <div class="col-md-5 mx-auto">
-        <div class="card-body">
+    <div class="eat_weight">
+    <div class="d-flex" >
+        <div class="col-md-5 mx-auto">
             <div class="card-body">
-                <table class='table'>
-                    <thead>
-                        <tr>
-                            <th scope='col'>日付</th>
-                            <th scope='col'>写真</th>
-                            <th scope='col'>メニュー</th>
-                            <th scope='col'>レシピ</th>
-                        </tr>
-                    </thead>
-                    <!-- ここに登録情報を表示する -->
-                    <tbody>
-                    @foreach($food as $mypage_eat)
-                        <tr>
-                            <th scpoe='col'>{{ $mypage_eat['date'] }}</th>
-                            <th scpoe='col'><img src="{{ asset('storage/images/'.$mypage_eat['image']) }}" class="img-fluid" alt="アイコン"></th>
-                            <th scpoe='col'>{{ $mypage_eat['menu'] }}</th>
-                            <th scpoe='col'>{{ $mypage_eat['recipe'] }}</th>
+                <div class="card-body">
+                    <table class='table'>
+                        <thead>
+                            <tr>
+                                
+                                <th scope='col'>日付</th>
+                                <th scope='col'>写真</th>
+                                <th scope='col'>メニュー</th>
+                                <th scpoe='col'>材料</th>
+                                <th scope='col'>レシピ</th>
+                            </tr>
+                        </thead>
+                        <!-- ここに登録情報を表示する -->
+                        <tbody>
+                        @foreach($food as $mypage_eat)
+                            <tr>
+                                <th scpoe='col'>{{ $mypage_eat['date'] }}</th>
+                                <th scpoe='col'><img src="{{ asset('storage/images/'.$mypage_eat['image']) }}" class="img-fluid" alt="アイコン"></th>
+                                <th scpoe='col'>{{ $mypage_eat['menu'] }}</th>
+                                <th scpoe='col'>{{ $mypage_eat['material'] }}</th>
+                                <th scpoe='col'>{{ $mypage_eat['recipe'] }}</th>
 
-                            <th><form action="{{ route('auto.destroy', ['auto' => $mypage_eat['id']]) }}" method="post">
+                                <th><form action="{{ route('auto.destroy', ['auto' => $mypage_eat['id']]) }}" method="post">
+                                    @method('delete')
+                                    @csrf
+                                    <button class='btn btn-danger'>削除</button>
+                                </form></th>
+                            
+
+                            </tr>
+                        @endforeach    
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-5 mx-auto">
+            <div class="card-body">
+                <div class="card-body">
+                    <table class='table'>
+                        <thead>
+                            <tr>
+                                <th scope='col'>日付</th>
+                                <th scope='col'>体重</th>
+                                <th scope='col'>体脂肪率</th>
+                            </tr>
+                        </thead>
+                        <!-- ここに登録情報を表示する -->
+                        <tbody>
+                        @foreach($weight as $mypage_body)
+                            <tr>
+                                <th scpoe='col'>{{ $mypage_body['date'] }}</th>
+                                <th scpoe='col'>{{ $mypage_body['weight'] }}</th>
+                                <th scpoe='col'>{{ $mypage_body['fat'] }}</th>
+                            </tr>
+                            <th><form action="{{ route('food.destroy', ['food' => $mypage_body['id']]) }}" method="post">
                                 @method('delete')
                                 @csrf
                                 <button class='btn btn-danger'>削除</button>
                             </form></th>
-                           
-
-                        </tr>
-                    @endforeach    
-                    </tbody>
-                </table>
+                        @endforeach    
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
-
-    <div class="col-md-5 mx-auto">
-        <div class="card-body">
-            <div class="card-body">
-                <table class='table'>
-                    <thead>
-                        <tr>
-                            <th scope='col'>日付</th>
-                            <th scope='col'>体重</th>
-                            <th scope='col'>体脂肪率</th>
-                        </tr>
-                    </thead>
-                    <!-- ここに登録情報を表示する -->
-                    <tbody>
-                    @foreach($weight as $mypage_body)
-                        <tr>
-                            <th scpoe='col'>{{ $mypage_body['date'] }}</th>
-                            <th scpoe='col'>{{ $mypage_body['weight'] }}</th>
-                            <th scpoe='col'>{{ $mypage_body['fat'] }}</th>
-                        </tr>
-                        <th><form action="{{ route('food.destroy', ['food' => $mypage_body['id']]) }}" method="post">
-                            @method('delete')
-                            @csrf
-                            <button class='btn btn-danger'>削除</button>
-                        </form></th>
-
-
-                    @endforeach    
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
+    </div>    
     <div class="col-md-5 mx-auto">
         <div class="card-body">
             <div class="card-body">
@@ -131,7 +153,9 @@
                     
                     @foreach($favorites as $mypage_fav)
                         <tr>
-                            <th scpoe='col'><img src="{{ asset('storage/icons/'.$mypage_fav['icon']) }}"  class="img-fluid" alt="アイコン"></th>
+                            <a href="{{ route('food.show',['food'=>$mypage_fav['user_id']]) }}">
+                                <img src="{{ asset('storage/icons/'.$mypage_fav['icon']) }}"  class="rounded-circle" width="50" height="50" alt="アイコン">
+                            </a>    
                             <th scpoe='col'>{{ $mypage_fav['date'] }}</th>
                             <th scpoe='col'><img src="{{ asset('storage/images/'.$mypage_fav['image']) }}" class="img-fluid" alt="アイコン"></th>
                             <th scpoe='col'>{{ $mypage_fav['menu'] }}</th>
@@ -146,3 +170,9 @@
     </div>
 
 @endsection
+
+<style>
+        .eat_weight{
+            margin-left:150px;
+        }
+</style>

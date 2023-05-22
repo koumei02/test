@@ -93,5 +93,6 @@ class MasterSubController extends Controller
 
         return redirect()->route('auto.index');
 
+
     }
 }

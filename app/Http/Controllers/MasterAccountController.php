@@ -56,7 +56,7 @@ class MasterAccountController extends Controller
      */
     public function show($id)
     {
-        //
+        // 
     }
 
     /**

@@ -28,7 +28,7 @@ class CreateData extends FormRequest
             'date' => 'required',
             'menu' => 'required',
             'recipe' => 'max:255',
-            'calorie' => 'required|integer'
+            'calorie' => 'required|integer',
         ];
     }
 }
