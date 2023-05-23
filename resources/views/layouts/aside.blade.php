@@ -35,7 +35,7 @@
       top: 0;
       left: 0;
       bottom: 0;
-      width: 20vw;
+      width: 15vw;
       background-color: #f8f9fa;
       padding: 2rem;
       overflow-y: auto;

@@ -61,21 +61,25 @@ class MasterController extends Controller
         if(!empty($keyword)) {
             $query->orWhere('name', 'LIKE', "%{$keyword}%")
             ->orWhere('menu', 'LIKE', "%{$keyword}%");
+            $w_query->orWhere('name', 'LIKE', "%{$keyword}%");
         };
         // 日付検索
         $from = $request->input('s-date');
         $until = $request->input('e-date');
         if (isset($from) && isset($until)) {
             $query = $query->whereBetween("date", [$from, $until]);
+            $w_query = $query->whereBetween("date", [$from, $until]);
         }
         $min = $request->input('age');
         $age = explode("~",$min);
         if (!empty($min)) {
             $query = $query->whereBetween("age", [$age[0], $age[1]]);
+            $w_query = $query->whereBetween("age", [$age[0], $age[1]]);
         }
         $gen = $request->input('medium');
         if (!empty($gen)) {
             $query->where("gender", $gen);
+            $w_query->where("gender", $gen);
         }
         $items = $query->get();
         $w_items = $w_query->get();

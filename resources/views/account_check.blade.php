@@ -85,6 +85,14 @@
         </div>
     </div>
 
+    @foreach($food as $mypage_eat)
+                        <tr>
+                            <th scpoe='col'>{{ $mypage_eat['date'] }}</th>
+                            <th scpoe='col'><img src="{{ asset('storage/images/'.$mypage_eat['image']) }}" class="img-fluid" alt="アイコン"></th>
+                            <th scpoe='col'>{{ $mypage_eat['menu'] }}</th>
+                            <th scpoe='col'>{{ $mypage_eat['recipe'] }}</th>
+                        </tr>
+                    @endforeach    
 
 
 

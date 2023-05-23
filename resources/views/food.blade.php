@@ -26,9 +26,9 @@
                             @csrf
                             <label for='date' class='mt-2'>日付</label>
                                 <input type='date' class='form-control' name='date' id='date'>
+                                <input type="file" name="image" required>
                             <label for='comment' class='mt-2'>料理名</label>
                                 <textarea class='form-control' name='menu' ></textarea>
-                                <input type="file" name="image">
                             <label for='number' >カロリー</label>
                                 <input type='comment' class='form-control' name='calorie'>
                             <label for='comment' class='mt-2'>材料</label>
