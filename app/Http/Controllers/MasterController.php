@@ -190,7 +190,11 @@ class MasterController extends Controller
      */
     public function edit(int  $id)
     {
-        //
+        $weights=Weight::find($id);
+        return view('weightedit',[
+            'weights'=>$weights,
+        ]);
+
     }
 
     /**
@@ -200,9 +204,17 @@ class MasterController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, int  $id)
+    public function update(CreateWeight $request, int  $id)
     {
-        //
+        $weights=Weight::find($id);
+        $weights->date=$request->date;
+        $weights->weight=$request->weight;
+        $weights->fat=$request->fat;
+        $weights->comment=$request->comment;
+        $weights->user_id=Auth::id();
+        $weights->save();
+
+        return redirect()->route('auto.show',['auto'=>Auth::id()]);
     }
 
     /**

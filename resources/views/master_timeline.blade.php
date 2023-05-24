@@ -78,7 +78,7 @@
                                         <p><img src="{{ asset('storage/images/'.$timeline_eat['image'])  }}"  width="300" height="150"></p>
                                         <p>{{ $timeline_eat['menu'] }}</p>
                                         <p>レシピ<br>{{ $timeline_eat['recipe'] }}</p>
-                                        <form action ="{{route('master.destroy',['master'=>$timeline_eat['id']])}}" method='POST'>
+                                        <form action ="{{route('master.destroy',['master'=>$timeline_eat['foodid']])}}" method='POST'>
                                             @method('delete')
                                             @csrf
                                             <button>削除</button>
@@ -109,7 +109,7 @@
                                     <p>日付 {{ $timeline_body['date'] }}</p>
                                     <p>体重 {{ $timeline_body['weight'] }}</p>
                                     <p>体脂肪率 {{ $timeline_body['fat'] }}</p>
-                                    <form action ="{{route('mastersub.destroy',['mastersub'=>$timeline_body['id']])}}" method='POST'>
+                                    <form action ="{{route('mastersub.destroy',['mastersub'=>$timeline_body['weightid']])}}" method='POST'>
                                         @method('delete')
                                         @csrf
                                         <button>削除</button>

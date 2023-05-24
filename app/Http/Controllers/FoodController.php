@@ -75,7 +75,6 @@ class FoodController extends Controller
         $fav = new Favorite;
 
         $pro = $profiling->find($id);
-        // dd($pro);
         $body = $weighting->where('user_id', $id)->get();
         $eat = $fooding->where('user_id', $id)->get();
         $favorites = $fav->where('user_id', $id)->get();
@@ -110,7 +109,10 @@ class FoodController extends Controller
      */
     public function edit($id)
     {
-        //
+        $foods=Food::find($id);
+        return view('foodedit',[
+            'foods'=>$foods,
+        ]);
     }
 
     /**
@@ -120,9 +122,24 @@ class FoodController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(CreateData $request, $id)
     {
-        //
+        $file_name = $request->file('image')->getClientOriginalName();
+        $request->file('image')->storeAs('public/images', $file_name);
+
+        $foods=Food::find($id);
+        $foods->date=$request->date;
+        $foods->recipe=$request->recipe;
+        $foods->menu=$request->menu;
+        $foods->calorie=$request->calorie;
+        $foods->material=$request->material;
+        $foods->image = $file_name;
+        $foods->user_id = Auth::id();
+        $foods->save();
+
+        return redirect()->route('auto.show',['auto'=>Auth::id()]);
+
+        
     }
 
     /**

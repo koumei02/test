@@ -35,7 +35,7 @@ function scrollToTop() {
             <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
                 <div class="container">
                 <a href="#" onclick="scrollToTop()" class="laravel">
-                        Laravel
+                        kenko
                 </a>
 
                     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
@@ -98,7 +98,7 @@ function scrollToTop() {
     left: 0;
     width: 100%;
     max-height: 100vh;
-    z-index: 0;
+    z-index: 2;
     }
     .laravel{
         margin-left:150px;

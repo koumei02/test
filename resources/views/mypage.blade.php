@@ -88,6 +88,10 @@
                                 <th scpoe='col'>{{ $mypage_eat['material'] }}</th>
                                 <th scpoe='col'>{{ $mypage_eat['recipe'] }}</th>
 
+                                <th><a href="{{ route('food.edit',['food'=>$mypage_eat['id']]) }}" class='btn btn-danger'>編集</a></th>
+                                
+
+
                                 <th><form action="{{ route('auto.destroy', ['auto' => $mypage_eat['id']]) }}" method="post">
                                     @method('delete')
                                     @csrf
@@ -121,12 +125,15 @@
                                 <th scpoe='col'>{{ $mypage_body['date'] }}</th>
                                 <th scpoe='col'>{{ $mypage_body['weight'] }}</th>
                                 <th scpoe='col'>{{ $mypage_body['fat'] }}</th>
+                                
+                                <th><a href="{{ route('master.edit',['master'=>$mypage_body['id']]) }}" class='btn btn-danger'>編集</a></th>
+                                
+                                <th><form action="{{ route('food.destroy', ['food' => $mypage_body['id']]) }}" method="post">
+                                    @method('delete')
+                                    @csrf
+                                    <button class='btn btn-danger'>削除</button>
+                                </form></th>
                             </tr>
-                            <th><form action="{{ route('food.destroy', ['food' => $mypage_body['id']]) }}" method="post">
-                                @method('delete')
-                                @csrf
-                                <button class='btn btn-danger'>削除</button>
-                            </form></th>
                         @endforeach    
                         </tbody>
                     </table>
@@ -150,7 +157,6 @@
                     </thead>
                     <!-- ここに登録情報を表示する -->
                     <tbody>
-                    
                     @foreach($favorites as $mypage_fav)
                         <tr>
                             <a href="{{ route('food.show',['food'=>$mypage_fav['user_id']]) }}">

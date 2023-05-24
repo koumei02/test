@@ -133,7 +133,7 @@ class AutoController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(CreateWeight $request)
     {
         //登録作業を書く箇所。
         $weighting = new Weight;
@@ -175,9 +175,8 @@ class AutoController extends Controller
         ->join('users', 'weights.user_id', 'users.id')->where('weights.user_id', Auth::id());
 
         $f_list = $fav
-        ->join('foods', 'favorites.food_id', 'foods.id')->where('favorites.user_id', Auth::id());
+        ->join('foods', 'favorites.food_id', 'foods.id')->join('profiles','favorites.user_id','profiles.user_id')->where('favorites.user_id', Auth::id());
         $favorites = $f_list->orderBy('favorites.created_at', 'desc')->get();
-
         $pro= Profile::join('weights','profiles.user_id','weights.user_id')->select('weights.*','profiles.*','weights.comment as wcomment')->where('profiles.user_id',$id)->orderby('weights.date','desc')->first();
         $profile = $profiling->find($id);
 
