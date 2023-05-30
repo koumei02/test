@@ -1,7 +1,9 @@
 @extends('layouts.app')
+@extends('layouts.aside')
 @section('content')
 <main class="py-4">
         <div class="col-md-5 mx-auto">
+            <br><br>
             <div class="card">
                 <div class="card-header">
                     プロフィール編集
@@ -12,7 +14,7 @@
                         <form action="{{route('auto.update', ['auto' => Auth::id()])}}" method="post" enctype="multipart/form-data">
                             @method('put')
                             @csrf
-                            <input type="file" name="icon" required>
+                            <input type="file" name="icon" required><br>
 
                             <label for='number' >年齢</label>
                                 <input type='number' class='form-control w-25' name='age' value ="{{ $pro['age']}}">

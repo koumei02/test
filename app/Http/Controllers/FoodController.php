@@ -10,6 +10,7 @@ use App\Food;
 use App\Weight;
 use App\Profile;
 use App\Favorite;
+use App\User;
 
 
 class FoodController extends Controller
@@ -93,11 +94,18 @@ class FoodController extends Controller
         ->join('foods', 'favorites.food_id', 'foods.id')->where('favorites.user_id', $id);
         $favorites = $f_list->orderBy('favorites.created_at', 'desc')->get();
 
+        $profile= Profile::join('weights','profiles.user_id','weights.user_id')
+        ->join('users','profiles.user_id','users.id')->select('users.name','weights.*','profiles.*','weights.comment as wcomment')->where('profiles.user_id',$id)->orderby('weights.date','desc')->first();
+        $user = User::where('id',$id)->first();
+
+
         return view('account', [
-            'profile' => $pro,
+            'profile' => $profile,
             'weight' => $w_list,
             'food' => $e_list,
             'favorites' => $favorites,
+            'user' => $user, 
+            'pro' => $pro,
         ]);    
     }
 

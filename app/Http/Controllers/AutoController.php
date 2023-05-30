@@ -10,6 +10,7 @@ use App\Weight;
 use App\Profile;
 use App\Food;
 use App\Favorite;
+use App\User;
 
 class AutoController extends Controller
 {
@@ -38,8 +39,8 @@ class AutoController extends Controller
         // 日付検索した後も順番変更する必要あり
         $foodlist = $eat->orderBy('date', 'desc')->get();
         $weightlist  = $body->orderBy('date', 'desc')->get();
-        $w_items  = $body->orderBy('date', 'desc')->get();
-        $items = $eat->orderBy('date', 'desc')->get();
+        $w_items  = $body->get();
+        $items = $eat->get();
         
         //テーブル結合
         $query = Food::query();
@@ -80,8 +81,8 @@ class AutoController extends Controller
             $query->where("gender", $gen);
             $w_query->where("gender", $gen);
         }
-        $items = $query->get();
-        $w_items = $w_query->get();
+        $items = $query->orderBy('date', 'desc')->get();
+        $w_items = $w_query->orderBy('date', 'desc')->get();
         $profile = $pro->where('user_id',Auth::id())->first();
         $user = Auth::user()->toArray();
 
@@ -175,17 +176,19 @@ class AutoController extends Controller
         ->join('users', 'weights.user_id', 'users.id')->where('weights.user_id', Auth::id());
 
         $f_list = $fav
-        ->join('foods', 'favorites.food_id', 'foods.id')->join('profiles','favorites.user_id','profiles.user_id')->where('favorites.user_id', Auth::id());
+        ->join('foods', 'favorites.food_id', 'foods.id')->join('profiles','foods.user_id','profiles.user_id')->select('profiles.*','foods.*','favorites.*','foods.user_id as foodid')->where('favorites.user_id', Auth::id());
         $favorites = $f_list->orderBy('favorites.created_at', 'desc')->get();
-        $pro= Profile::join('weights','profiles.user_id','weights.user_id')->select('weights.*','profiles.*','weights.comment as wcomment')->where('profiles.user_id',$id)->orderby('weights.date','desc')->first();
+        $pro= Profile::join('weights','profiles.user_id','weights.user_id')
+        ->join('users','profiles.user_id','users.id')->select('users.name','weights.*','profiles.*','weights.comment as wcomment')->where('profiles.user_id',$id)->orderby('weights.date','desc')->first();
         $profile = $profiling->find($id);
-
+        $user = User::where('id',Auth::id())->first();
         return view('mypage', [
             'pro' => $pro,
             'weight' => $body,
             'food' => $e_list,
             'favorites' => $favorites,
             'profile' => $profile,
+            'user' =>$user,
         ]);    
 
 

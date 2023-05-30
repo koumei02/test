@@ -10,6 +10,7 @@ use App\Weight;
 use App\Profile;
 use App\Food;
 use App\Favorite;
+use App\User;
 
 
 class MasterController extends Controller
@@ -167,20 +168,28 @@ class MasterController extends Controller
         $profiling = new Profile;  
         $weighting = new Weight;
         $fooding = new Food;
-
+// $pro = Weight::where('user_id',$id)->first();
         $pro = $profiling->find($id);
+        $profile= Profile::join('weights','profiles.user_id','weights.user_id')
+        ->join('users','profiles.user_id','users.id')->select('users.name','weights.*','profiles.*','weights.comment as wcomment')->where('profiles.user_id',$id)->orderby('weights.date','desc')->first();
+        // dd($pro);
+        $user = User::where('id',$id)->first();
+    
         // dd($pro);
         $body = $weighting->where('user_id', $id)->orderBy('date', 'desc')->get();
         $eat = $fooding->where('user_id', $id)->orderBy('date', 'desc')->get();
 
         return view('account_check', [
-            'profile' => $pro,
+            'profile' => $profile,
             'weight' => $body,
             'food' => $eat,
+            'user' => $user,
+            'pro' => $pro,
         ]);    
 
-
     }
+
+
 
     /**
      * Show the form for editing the specified resource.

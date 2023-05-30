@@ -1,11 +1,12 @@
-
 @extends('layouts.app')
+@extends('layouts.aside')
 @section('content')
 </head>
 <body>
 <div class="container">
         <div class="col-md-8">
             <div class="card">
+               <br><br>
                 <div class="card-header">体重・体脂肪記録</div>
                     <div class="m-4 ml-5">
 
@@ -35,8 +36,6 @@
                            <fieldset>
                            <label class='mt-2'>体脂肪率</legend><br>
                                 <input type="number" id="fat" step="0.1" min="0" class="border border-primary my-20" name='fat'> 
-                           <label for='comment' class='mt-2'>コメント</label>
-                                <textarea class='form-control' name='comment' ></textarea>
 
                         </div>
 

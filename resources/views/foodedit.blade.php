@@ -1,4 +1,5 @@
 @extends('layouts.app')
+@extends('layouts.aside')
 @section('content')
     <main class="py-4">
         <div class="col-md-5 mx-auto">

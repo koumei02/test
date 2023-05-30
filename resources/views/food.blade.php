@@ -1,4 +1,5 @@
 @extends('layouts.app')
+@extends('layouts.aside')
 @section('content')
     <main class="py-4">
         <div class="col-md-5 mx-auto">
@@ -26,7 +27,7 @@
                             @csrf
                             <label for='date' class='mt-2'>日付</label>
                                 <input type='date' class='form-control' name='date' id='date'>
-                                <input type="file" name="image" required>
+                                <input type="file" name="image" required><br>
                             <label for='comment' class='mt-2'>料理名</label>
                                 <textarea class='form-control' name='menu' ></textarea>
                             <label for='number' >カロリー</label>
